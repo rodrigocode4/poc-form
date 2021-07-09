@@ -53,6 +53,7 @@ body {
     color: white;
     font-size: 14px;
     font-weight: 200;
+    text-transform: capitalize;
   }
   
   button[type="submit"],

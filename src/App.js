@@ -1,8 +1,10 @@
-import { Field } from './Components/'
+import { useCallback, useState } from "react";
 
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+
+import { Field } from './Components/'
 
 const schema = yup.object().shape({
   nome: yup
@@ -22,12 +24,28 @@ const schema = yup.object().shape({
     .required('campo obrigatório')
 });
 
+
 function App() {
+  const [dataForm, setDataForm] = useState()
+
   const { control, handleSubmit } = useForm({ resolver: yupResolver(schema) });
+  
   const onSubmit = (data) => {
-    console.log(data);
+    setDataForm(data);
   };
-  console.log('aaaa')
+
+  const handleChangeInput = useCallback((event) => {
+    const validator = event.nativeEvent.data
+    if(validator === null) return event
+    if(isNaN(parseInt(validator))) return;
+  
+    const value = String(event.target.value).replace(/\./g, '')
+    let valueFormated = new Intl.NumberFormat('pt-BR').format(value)
+    event.target.value = valueFormated
+    return event
+  },[])
+  
+
   return (
     <>
       <h1 style={{textAlign: 'center'}}>Configuração Inicial da POC-Form</h1>
@@ -38,13 +56,19 @@ function App() {
         <Field 
           name="total"
           control={control}
-          onChangeInput={true}
+          onChangeInput={handleChangeInput}
           />
         <Field 
           name="site" 
           control={control}/>
         <input type="submit" />
       </form>
+      {dataForm && (
+          <pre style={{textAlign: 'center'}}>
+            <code>{JSON.stringify(dataForm)}</code>
+          </pre>
+          )
+      }
     </>
   );
 }
