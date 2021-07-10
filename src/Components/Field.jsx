@@ -5,7 +5,7 @@ export const Field = ({ name, control, onChangeInput, ...restProps }) => {
     const {
         field: { value, onChange, onBlur },
         fieldState: { error },
-      } = useController({ name, control,  });
+      } = useController({ name, control });
     
     return (
         <>
@@ -24,7 +24,6 @@ export const Field = ({ name, control, onChangeInput, ...restProps }) => {
 }
 
 const processError = error => {
-    console.log(error)
     if (error.type === 'typeError') {
         return {...error, message: 'Caracter inesperado e inválido!'}
     }
